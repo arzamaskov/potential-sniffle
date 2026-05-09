@@ -15,7 +15,7 @@ BACKUP_DIR = backups
 BACKUP_FILE ?= $(BACKUP_DIR)/runtracker-$(shell date +%Y%m%d-%H%M%S).dump
 CMD_ARGS = $(or $(cmd),$(a),$(ARGS))
 
-.PHONY: help build up down restart logs ps shell sh composer artisan install migrate fresh seed db cache-clear config-clear route-clear view-clear optimize test lint lint-fix phpstan qa vite-install vite-build vite-dev prod-build prod-up prod-down prod-restart prod-logs prod-ps prod-shell prod-db-backup prod-db-restore
+.PHONY: help build up down restart logs ps shell sh composer artisan install migrate fresh seed db cache-clear config-clear route-clear view-clear optimize test lint lint-fix phpstan deptrac qa vite-install vite-build vite-dev prod-build prod-up prod-down prod-restart prod-logs prod-ps prod-shell prod-db-backup prod-db-restore
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-22s\033[0m %s\n", $$1, $$2}'
@@ -96,7 +96,10 @@ lint-fix: ## Fix code style with Laravel Pint
 phpstan: ## Run PHPStan if installed
 	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) ./vendor/bin/phpstan analyse
 
-qa: lint phpstan test ## Run quality checks
+deptrac: ## Run Deptrac architecture checks
+	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) ./vendor/bin/deptrac analyse --no-progress
+
+qa: lint phpstan deptrac test ## Run quality checks
 
 vite-install: ## Install frontend dependencies
 	$(DOCKER_COMPOSE) exec $(VITE_CONTAINER) pnpm install

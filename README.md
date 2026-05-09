@@ -46,6 +46,9 @@ make artisan cmd=migrate
 make composer cmd=install
 make test
 make lint
+make phpstan
+make deptrac
+make qa
 ```
 
 ## Production

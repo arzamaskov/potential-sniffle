@@ -1,0 +1,87 @@
+deptrac:
+  paths:
+    - ./app
+    - ./src
+    - ./database
+    - ./tests
+
+  layers:
+    - name: LaravelInfrastructure
+      collectors:
+        - type: classLike
+          value: '^App\\.*'
+
+    - name: SharedDomain
+      collectors:
+        - type: classLike
+          value: '^Src\\Shared\\Domain\\.*'
+
+    - name: SharedApplication
+      collectors:
+        - type: classLike
+          value: '^Src\\Shared\\Application\\.*'
+
+    - name: IdentityDomain
+      collectors:
+        - type: classLike
+          value: '^Src\\Identity\\Domain\\.*'
+
+    - name: IdentityApplication
+      collectors:
+        - type: classLike
+          value: '^Src\\Identity\\Application\\.*'
+
+    - name: DatabaseInfrastructure
+      collectors:
+        - type: classLike
+          value: '^Database\\.*'
+
+    - name: Tests
+      collectors:
+        - type: classLike
+          value: '^Tests\\.*'
+
+    - name: Framework
+      collectors:
+        - type: classLike
+          value: '^(Illuminate|Laravel|Symfony|Psr|Carbon|Closure|Faker|Mockery|PHPUnit)\\.*'
+
+  ruleset:
+    LaravelInfrastructure:
+      - IdentityApplication
+      - IdentityDomain
+      - SharedApplication
+      - SharedDomain
+      - Framework
+
+    SharedDomain: []
+
+    SharedApplication:
+      - SharedDomain
+
+    IdentityDomain:
+      - SharedDomain
+
+    IdentityApplication:
+      - IdentityDomain
+      - SharedApplication
+      - SharedDomain
+
+    DatabaseInfrastructure:
+      - LaravelInfrastructure
+      - IdentityApplication
+      - IdentityDomain
+      - SharedApplication
+      - SharedDomain
+      - Framework
+
+    Tests:
+      - LaravelInfrastructure
+      - IdentityApplication
+      - IdentityDomain
+      - SharedApplication
+      - SharedDomain
+      - DatabaseInfrastructure
+      - Framework
+
+    Framework: []
