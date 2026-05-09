@@ -1,0 +1,51 @@
+services:
+  app:
+    image: runtracker-laravel-php:dev
+    build:
+      target: development
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      XDEBUG_MODE: ${XDEBUG_MODE:-debug,develop}
+      XDEBUG_CONFIG: client_host=host.docker.internal client_port=9003
+      PHP_IDE_CONFIG: serverName=runtracker-laravel
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - .:/var/www/html
+      - composer-cache:/tmp/composer-cache
+
+  web:
+    image: runtracker-laravel-nginx:dev
+    ports:
+      - "${APP_PORT:-8080}:80"
+    volumes:
+      - .:/var/www/html:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+
+  vite:
+    image: runtracker-laravel-node:dev
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+    working_dir: /var/www/html
+    command: >
+      sh -lc 'if [ -f package.json ]; then
+        pnpm install && pnpm dev --host 0.0.0.0;
+      else
+        echo "package.json not found; Vite service is idle until Laravel frontend files exist.";
+        tail -f /dev/null;
+      fi'
+    ports:
+      - "${VITE_PORT:-5173}:5173"
+    volumes:
+      - .:/var/www/html
+      - node-modules:/var/www/html/node_modules
+      - pnpm-store:/pnpm/store
+    networks:
+      - app
+
+volumes:
+  composer-cache:
+  node-modules:
+  pnpm-store:
