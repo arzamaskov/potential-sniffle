@@ -21,7 +21,7 @@ final readonly class CreateUserHandler
     {
         $login = Login::from($command->login);
         if ($this->userRepository->existsByLogin($login)) {
-            throw new LoginAlreadyTaken();
+            throw new LoginAlreadyTaken;
         }
 
         $userId = $this->userIds->generate();
