@@ -84,8 +84,8 @@ view-clear: ## Clear Laravel compiled views
 optimize: ## Cache Laravel config, routes, events, and views
 	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) php artisan optimize
 
-test: ## Run application tests
-	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) php artisan test
+test: ## Run application tests, e.g. make test cmd=tests/Feature/HealthCheckTest.php
+	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) php artisan test $(CMD_ARGS)
 
 lint: ## Run Laravel Pint checks
 	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) ./vendor/bin/pint --test
