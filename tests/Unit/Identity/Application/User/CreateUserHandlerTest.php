@@ -83,9 +83,9 @@ final class InMemoryUserRepository implements UserRepository
         return $this->existingLogin?->equals($login) ?? false;
     }
 
-    public function add(User $user): void
+    public function add(User $domainUser): void
     {
-        $this->addedUser = $user;
+        $this->addedUser = $domainUser;
     }
 
     public function wasUserAdded(): bool
