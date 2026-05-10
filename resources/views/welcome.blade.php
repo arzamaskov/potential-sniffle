@@ -57,7 +57,7 @@
 
             <div class="text-center lg:text-left mb-10">
                 <h2 class="text-[26px] font-semibold tracking-tight text-gray-900">С возвращением</h2>
-                <p class="mt-2 text-[15px] text-gray-500">Войдите в систему, чтобы продолжить</p>
+                <p class="mt-2 text-[15px] text-gray-500">Войдите, чтобы продолжить</p>
             </div>
 
             <div class="mt-8">
