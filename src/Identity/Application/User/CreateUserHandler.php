@@ -19,9 +19,15 @@ final readonly class CreateUserHandler
 
     public function handle(CreateUserCommand $command): UserId
     {
+        $login = Login::from($command->login);
+        if ($this->userRepository->existsByLogin($login)) {
+            throw new LoginAlreadyTaken();
+        }
+
         $userId = $this->userIds->generate();
         $passwordHash = $this->passwordHasher->hash($command->plainPassword);
-        $user = new User($userId, Login::from($command->login), $passwordHash);
+
+        $user = new User($userId, $login, $passwordHash);
         $this->userRepository->add($user);
 
         return $userId;

@@ -7,4 +7,6 @@ namespace Src\Identity\Domain\User;
 interface UserRepository
 {
     public function add(User $user): void;
+
+    public function existsByLogin(Login $login): bool;
 }
