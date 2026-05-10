@@ -48,7 +48,8 @@ class AuthenticateUserHandlerTest extends TestCase
             $handler->handle(new AuthenticateUserCommand('unknown-login', 'secret-password'));
 
             $this->fail('Expected invalid credentials.');
-        } catch (InvalidCredentials) {
+        } catch (InvalidCredentials $exception) {
+            $this->assertSame('Invalid credentials', $exception->getMessage());
             $this->assertTrue(Login::from('unknown-login')->equals($users->lastSearchedLogin()));
             $this->assertNull($passwordVerifier->plainPassword);
             $this->assertNull($passwordVerifier->passwordHash);
@@ -71,7 +72,8 @@ class AuthenticateUserHandlerTest extends TestCase
             $handler->handle(new AuthenticateUserCommand('user-login', 'wrong-password'));
 
             $this->fail('Expected invalid credentials.');
-        } catch (InvalidCredentials) {
+        } catch (InvalidCredentials $exception) {
+            $this->assertSame('Invalid credentials', $exception->getMessage());
             $this->assertSame('wrong-password', $passwordVerifier->plainPassword);
             $this->assertSame($user->passwordHash(), $passwordVerifier->passwordHash);
         }

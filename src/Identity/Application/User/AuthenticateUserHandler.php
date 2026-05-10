@@ -20,7 +20,7 @@ final readonly class AuthenticateUserHandler
         $login = Login::from($command->login);
         $user = $this->userRepository->findByLogin($login);
         if ($user === null) {
-            throw new InvalidCredentials("User '{$command->login}' not found");
+            throw new InvalidCredentials;
         }
 
         if (! $this->passwordVerifier->verify($command->password, $user->passwordHash())) {

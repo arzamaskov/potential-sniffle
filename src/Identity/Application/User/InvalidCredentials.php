@@ -6,4 +6,10 @@ namespace Src\Identity\Application\User;
 
 use RuntimeException;
 
-final class InvalidCredentials extends RuntimeException {}
+final class InvalidCredentials extends RuntimeException
+{
+    public function __construct()
+    {
+        parent::__construct('Invalid credentials');
+    }
+}
