@@ -25,4 +25,17 @@ final readonly class EloquentUserRepository implements UserRepository
             ->where('login', $login->value())
             ->exists();
     }
+
+    public function findByLogin(Login $login): ?DomainUser
+    {
+        $eloquentUser = EloquentUser::query()
+            ->where('login', $login->value())
+            ->first();
+
+        if ($eloquentUser === null) {
+            return null;
+        }
+
+        return $this->mapper->toDomain($eloquentUser);
+    }
 }

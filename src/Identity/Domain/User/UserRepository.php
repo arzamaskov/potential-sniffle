@@ -9,4 +9,6 @@ interface UserRepository
     public function add(User $domainUser): void;
 
     public function existsByLogin(Login $login): bool;
+
+    public function findByLogin(Login $login): ?User;
 }

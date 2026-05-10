@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Identity\Application\User;
 
-use LogicException;
 use PHPUnit\Framework\TestCase;
 use Src\Identity\Application\User\CreateUserCommand;
 use Src\Identity\Application\User\CreateUserHandler;
@@ -15,7 +14,6 @@ use Src\Identity\Domain\User\Login;
 use Src\Identity\Domain\User\PasswordHash;
 use Src\Identity\Domain\User\User;
 use Src\Identity\Domain\User\UserId;
-use Src\Identity\Domain\User\UserRepository;
 
 class CreateUserHandlerTest extends TestCase
 {
@@ -46,8 +44,13 @@ class CreateUserHandlerTest extends TestCase
     public function test_it_does_not_create_user_when_login_is_already_taken(): void
     {
         $takenLogin = Login::from('user-login');
+        $existingUser = new User(
+            UserId::from('01HX8F5X4B9Z7N6Y2K3M4P5Q6S'),
+            $takenLogin,
+            PasswordHash::from(password_hash('existing-password', PASSWORD_ARGON2ID)),
+        );
 
-        $users = new InMemoryUserRepository($takenLogin);
+        $users = new InMemoryUserRepository($existingUser);
         $userIds = new StubUserIdGenerator(UserId::from('01HX8F5X4B9Z7N6Y2K3M4P5Q6R'));
         $passwordHasher = new StubPasswordHasher(
             PasswordHash::from(password_hash('secret-password', PASSWORD_ARGON2ID)),
@@ -65,50 +68,6 @@ class CreateUserHandlerTest extends TestCase
             $this->assertFalse($userIds->wasGenerated);
             $this->assertNull($passwordHasher->plainPassword);
         }
-    }
-}
-
-final class InMemoryUserRepository implements UserRepository
-{
-    private ?User $addedUser = null;
-
-    private ?Login $lastCheckedLogin = null;
-
-    public function __construct(private readonly ?Login $existingLogin = null) {}
-
-    public function existsByLogin(Login $login): bool
-    {
-        $this->lastCheckedLogin = $login;
-
-        return $this->existingLogin?->equals($login) ?? false;
-    }
-
-    public function add(User $domainUser): void
-    {
-        $this->addedUser = $domainUser;
-    }
-
-    public function wasUserAdded(): bool
-    {
-        return $this->addedUser instanceof User;
-    }
-
-    public function lastCheckedLogin(): Login
-    {
-        if (! $this->lastCheckedLogin instanceof Login) {
-            throw new LogicException('Login was not checked.');
-        }
-
-        return $this->lastCheckedLogin;
-    }
-
-    public function savedUser(): User
-    {
-        if (! $this->addedUser instanceof User) {
-            throw new LogicException('User was not added to the repository.');
-        }
-
-        return $this->addedUser;
     }
 }
 

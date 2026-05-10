@@ -42,6 +42,30 @@ class EloquentUserRepositoryTest extends TestCase
         $this->assertFalse($repository->existsByLogin(Login::from('another-login')));
     }
 
+    public function test_it_finds_user_by_normalized_login(): void
+    {
+        $repository = $this->repository();
+        $user = $this->user();
+
+        $repository->add($user);
+
+        $foundUser = $repository->findByLogin(Login::from(' USER-login '));
+
+        $this->assertNotNull($foundUser);
+        $this->assertTrue($user->id()->equals($foundUser->id()));
+        $this->assertTrue($user->login()->equals($foundUser->login()));
+        $this->assertTrue($user->passwordHash()->equals($foundUser->passwordHash()));
+    }
+
+    public function test_it_returns_null_when_user_is_not_found_by_login(): void
+    {
+        $repository = $this->repository();
+
+        $repository->add($this->user());
+
+        $this->assertNull($repository->findByLogin(Login::from('another-login')));
+    }
+
     private function repository(): UserRepository
     {
         return new EloquentUserRepository(new IdentityUserMapper);
