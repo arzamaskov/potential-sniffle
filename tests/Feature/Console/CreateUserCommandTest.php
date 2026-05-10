@@ -33,6 +33,27 @@ class CreateUserCommandTest extends TestCase
         $this->assertTrue(password_verify($generatedPassword, $user['password_hash']));
     }
 
+    #[Test]
+    public function it_fails_when_login_is_already_taken(): void
+    {
+        $this->withoutMockingConsoleOutput();
+
+        $this->artisan('identity:create-user admin');
+
+        $exitCode = $this->artisan('identity:create-user admin');
+        $output = $this->app->make(Kernel::class)->output();
+
+        $this->assertSame(Command::FAILURE, $exitCode);
+        $this->assertStringContainsString('Login already taken', $output);
+        $this->assertSame(
+            1,
+            (int) $this->app['db']
+                ->table('users')
+                ->where('login', 'admin')
+                ->count(),
+        );
+    }
+
     /**
      * @return array{id: string, login: string, password_hash: string}
      */
