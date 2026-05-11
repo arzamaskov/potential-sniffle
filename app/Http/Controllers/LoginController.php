@@ -23,7 +23,7 @@ final class LoginController
             Auth::guard('web')->loginUsingId($userId->value());
             $request->session()->regenerate();
 
-            return redirect()->route('home');
+            return redirect()->route('profile');
         } catch (InvalidCredentials $e) {
             return back()->withErrors(['login' => 'Invalid credentials'])->withInput(['login' => $login]);
         }

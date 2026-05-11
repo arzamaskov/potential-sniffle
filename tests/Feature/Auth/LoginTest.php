@@ -15,7 +15,7 @@ class LoginTest extends TestCase
 
     public function test_it_shows_login_form(): void
     {
-        $response = $this->get('/');
+        $response = $this->get('/login');
 
         $response->assertOk();
         $response->assertSee('action="'.route('login').'"', false);
@@ -26,7 +26,7 @@ class LoginTest extends TestCase
 
     public function test_it_does_not_load_fonts_from_external_cdn(): void
     {
-        $response = $this->get('/');
+        $response = $this->get('/login');
 
         $response->assertOk();
         $response->assertDontSee('fonts.bunny.net', false);
@@ -46,7 +46,7 @@ class LoginTest extends TestCase
                 'password' => 'secret-password',
             ]);
 
-        $response->assertRedirect('/');
+        $response->assertRedirect('/profile');
         $this->assertAuthenticatedAs($user);
     }
 
@@ -55,7 +55,7 @@ class LoginTest extends TestCase
         $this->user();
 
         $response = $this
-            ->from('/')
+            ->from('/login')
             ->withSession(['_token' => 'test-token'])
             ->post('/login', [
                 '_token' => 'test-token',
@@ -63,7 +63,7 @@ class LoginTest extends TestCase
                 'password' => 'wrong-password',
             ]);
 
-        $response->assertRedirect('/');
+        $response->assertRedirect('/login');
         $response->assertSessionHasErrors([
             'login' => 'Invalid credentials',
         ]);
@@ -76,7 +76,7 @@ class LoginTest extends TestCase
 
         $response = $this
             ->followingRedirects()
-            ->from('/')
+            ->from('/login')
             ->withSession(['_token' => 'test-token'])
             ->post('/login', [
                 '_token' => 'test-token',

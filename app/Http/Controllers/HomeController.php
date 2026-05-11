@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 final class HomeController
 {
-    public function __invoke(): View
+    public function __invoke(): RedirectResponse
     {
-        return view('auth.login');
+        return Auth::check()
+            ? redirect()->route('profile')
+            : redirect()->route('login');
     }
 }
