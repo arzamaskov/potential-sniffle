@@ -24,6 +24,16 @@ class LoginTest extends TestCase
         $response->assertSee('name="password"', false);
     }
 
+    public function test_it_does_not_load_fonts_from_external_cdn(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertOk();
+        $response->assertDontSee('fonts.bunny.net', false);
+        $response->assertDontSee('fonts.googleapis.com', false);
+        $response->assertDontSee('fonts.gstatic.com', false);
+    }
+
     public function test_it_authenticates_user_with_valid_credentials(): void
     {
         $user = $this->user();
