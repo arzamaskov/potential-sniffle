@@ -10,12 +10,13 @@ VITE_CONTAINER = vite
 
 APP_URL = http://localhost:8080
 VITE_URL = http://localhost:5173
+TEST_DB_DATABASE ?= runtracker_testing
 
 BACKUP_DIR = backups
 BACKUP_FILE ?= $(BACKUP_DIR)/runtracker-$(shell date +%Y%m%d-%H%M%S).dump
 CMD_ARGS = $(or $(cmd),$(a),$(ARGS))
 
-.PHONY: help build up down restart logs ps shell sh composer artisan install migrate fresh seed db cache-clear config-clear route-clear view-clear optimize test lint lint-fix phpstan deptrac qa vite-install vite-build vite-dev prod-build prod-up prod-down prod-restart prod-logs prod-ps prod-shell prod-db-backup prod-db-restore
+.PHONY: help build up down restart logs ps shell sh composer artisan install migrate fresh seed db cache-clear config-clear route-clear view-clear optimize test-db test lint lint-fix phpstan deptrac qa vite-install vite-build vite-dev prod-build prod-up prod-down prod-restart prod-logs prod-ps prod-shell prod-db-backup prod-db-restore
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-22s\033[0m %s\n", $$1, $$2}'
@@ -83,6 +84,9 @@ view-clear: ## Clear Laravel compiled views
 
 optimize: ## Cache Laravel config, routes, events, and views
 	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) php artisan optimize
+
+test-db: ## Create testing PostgreSQL database if it does not exist
+	$(DOCKER_COMPOSE) exec $(POSTGRES_CONTAINER) sh -c 'createdb -U "$${POSTGRES_USER:-runtracker}" "$(TEST_DB_DATABASE)" 2>/dev/null || psql -U "$${POSTGRES_USER:-runtracker}" -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '\''$(TEST_DB_DATABASE)'\''" | grep -q 1'
 
 test: ## Run application tests, e.g. make test cmd=tests/Feature/HealthCheckTest.php
 	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) php artisan test $(CMD_ARGS)
