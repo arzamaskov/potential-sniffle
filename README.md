@@ -27,7 +27,7 @@ cp .env.docker.example .env.docker
 make up
 ```
 
-Install dependencies and run migrations:
+Install dependencies, generate the application key, and run migrations:
 
 ```bash
 make install
@@ -43,6 +43,7 @@ make help
 make logs
 make shell
 make artisan cmd=migrate
+make app-key
 make composer cmd=install
 make test
 make lint

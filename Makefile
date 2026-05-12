@@ -19,7 +19,7 @@ BACKUP_DIR = backups
 BACKUP_FILE ?= $(BACKUP_DIR)/runtracker-$(shell date +%Y%m%d-%H%M%S).dump
 CMD_ARGS = $(or $(cmd),$(a),$(ARGS))
 
-.PHONY: help build up down restart logs ps shell sh composer artisan install migrate fresh seed db cache-clear config-clear route-clear view-clear optimize test-db test lint lint-fix phpstan deptrac qa vite-install vite-build vite-dev prod-build prod-up prod-down prod-restart prod-logs prod-ps prod-shell prod-db-backup prod-db-restore
+.PHONY: help build up down restart logs ps shell sh composer artisan install app-key migrate fresh seed db cache-clear config-clear route-clear view-clear optimize test-db test lint lint-fix phpstan deptrac qa vite-install vite-build vite-dev prod-build prod-up prod-down prod-restart prod-logs prod-ps prod-shell prod-db-backup prod-db-restore
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-22s\033[0m %s\n", $$1, $$2}'
@@ -59,7 +59,24 @@ artisan: ## Run artisan, e.g. make artisan cmd=migrate
 
 install: ## Install PHP and frontend dependencies
 	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) composer install
+	$(MAKE) app-key
 	$(VITE_EXEC) pnpm install
+
+app-key: ## Generate APP_KEY in the local Docker env file if missing
+	@test -f "$(ENV_FILE)" || (echo "Missing $(ENV_FILE). Copy .env.docker.example first." && exit 1)
+	@if grep -Eq '^APP_KEY=base64:.+' "$(ENV_FILE)"; then \
+		echo "APP_KEY already exists in $(ENV_FILE)"; \
+	else \
+		key="$$( $(DOCKER_COMPOSE) exec -T $(PHP_CONTAINER) php artisan key:generate --show --no-interaction )"; \
+		case "$$key" in base64:*) ;; *) echo "Failed to generate APP_KEY" >&2; exit 1 ;; esac; \
+		if grep -q '^APP_KEY=' "$(ENV_FILE)"; then \
+			sed -i "s|^APP_KEY=.*|APP_KEY=$$key|" "$(ENV_FILE)"; \
+		else \
+			printf '\nAPP_KEY=%s\n' "$$key" >> "$(ENV_FILE)"; \
+		fi; \
+		echo "Generated APP_KEY in $(ENV_FILE)"; \
+		$(DOCKER_COMPOSE) up -d --force-recreate --no-deps $(PHP_CONTAINER); \
+	fi
 
 migrate: ## Run database migrations
 	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) php artisan migrate
