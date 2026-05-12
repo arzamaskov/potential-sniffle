@@ -1,12 +1,15 @@
 ENV_FILE ?= .env.docker
 ENV_ARG = $(shell test -f $(ENV_FILE) && printf -- '--env-file %s' $(ENV_FILE))
+APP_UID ?= $(shell id -u 2>/dev/null || echo 1000)
+APP_GID ?= $(shell id -g 2>/dev/null || echo 1000)
 
-DOCKER_COMPOSE = docker compose $(ENV_ARG)
+DOCKER_COMPOSE = APP_UID=$(APP_UID) APP_GID=$(APP_GID) docker compose $(ENV_ARG)
 DOCKER_COMPOSE_PROD = docker compose $(ENV_ARG) -f compose.yml
 
 PHP_CONTAINER = app
 POSTGRES_CONTAINER = postgres
 VITE_CONTAINER = vite
+VITE_EXEC = $(DOCKER_COMPOSE) exec -u $(APP_UID):$(APP_GID) $(VITE_CONTAINER)
 
 APP_URL = http://localhost:8080
 VITE_URL = http://localhost:5173
@@ -56,7 +59,7 @@ artisan: ## Run artisan, e.g. make artisan cmd=migrate
 
 install: ## Install PHP and frontend dependencies
 	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) composer install
-	$(DOCKER_COMPOSE) exec $(VITE_CONTAINER) pnpm install
+	$(VITE_EXEC) pnpm install
 
 migrate: ## Run database migrations
 	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) php artisan migrate
@@ -106,13 +109,13 @@ deptrac: ## Run Deptrac architecture checks
 qa: lint phpstan deptrac test ## Run quality checks
 
 vite-install: ## Install frontend dependencies
-	$(DOCKER_COMPOSE) exec $(VITE_CONTAINER) pnpm install
+	$(VITE_EXEC) pnpm install
 
 vite-build: ## Build frontend assets
-	$(DOCKER_COMPOSE) exec $(VITE_CONTAINER) pnpm build
+	$(VITE_EXEC) pnpm build
 
 vite-dev: ## Run Vite dev server in the foreground
-	$(DOCKER_COMPOSE) exec $(VITE_CONTAINER) pnpm dev --host 0.0.0.0
+	$(VITE_EXEC) pnpm dev --host 0.0.0.0
 
 prod-build: ## Build production Docker images
 	$(DOCKER_COMPOSE_PROD) build

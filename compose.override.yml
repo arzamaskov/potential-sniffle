@@ -3,6 +3,10 @@ services:
     image: runtracker-laravel-php:dev
     build:
       target: development
+      args:
+        APP_UID: ${APP_UID:-1000}
+        APP_GID: ${APP_GID:-1000}
+    user: "${APP_UID:-1000}:${APP_GID:-1000}"
     environment:
       APP_ENV: local
       APP_DEBUG: "true"
@@ -13,7 +17,6 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - .:/var/www/html
-      - composer-cache:/tmp/composer-cache
 
   web:
     image: runtracker-laravel-nginx:dev
@@ -28,15 +31,23 @@ services:
     build:
       context: .
       dockerfile: docker/node/Dockerfile
+      args:
+        APP_UID: ${APP_UID:-1000}
+        APP_GID: ${APP_GID:-1000}
+    user: "0:0"
     environment:
+      APP_UID: ${APP_UID:-1000}
+      APP_GID: ${APP_GID:-1000}
       VITE_DEV_SERVER_HOST: 0.0.0.0
       VITE_DEV_SERVER_URL: ${VITE_DEV_SERVER_URL:-http://localhost:5173}
       VITE_CORS_ORIGIN: ${VITE_CORS_ORIGIN:-http://localhost:8080}
       VITE_PORT: ${VITE_PORT:-5173}
     working_dir: /var/www/html
     command: >
-      sh -lc 'if [ -f package.json ]; then
-        pnpm install && pnpm dev;
+      sh -lc 'mkdir -p node_modules /pnpm/store /tmp/node-home;
+      chown -R "$${APP_UID}:$${APP_GID}" node_modules /pnpm/store /tmp/node-home;
+      if [ -f package.json ]; then
+        exec su-exec "$${APP_UID}:$${APP_GID}" sh -lc "pnpm install && pnpm dev";
       else
         echo "package.json not found; Vite service is idle until Laravel frontend files exist.";
         tail -f /dev/null;
@@ -55,6 +66,5 @@ services:
       - "${DB_FORWARD_PORT:-5432}:5432"
 
 volumes:
-  composer-cache:
   node-modules:
   pnpm-store:

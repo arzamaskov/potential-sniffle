@@ -34,6 +34,9 @@ RUN mkdir -p storage bootstrap/cache \
 
 FROM base AS development
 
+ARG APP_UID=1000
+ARG APP_GID=1000
+
 RUN apk add --no-cache \
         git \
         linux-headers \
@@ -48,15 +51,19 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY docker/php/conf.d/10-opcache-dev.ini /usr/local/etc/php/conf.d/10-opcache.ini
 COPY docker/php/conf.d/20-xdebug.ini /usr/local/etc/php/conf.d/20-xdebug.ini
 
-RUN mkdir -p /tmp/composer-cache \
-    && chown -R www-data:www-data /tmp/composer-cache
+RUN mkdir -p /tmp/app-home /tmp/composer-cache \
+    && chown -R "${APP_UID}:${APP_GID}" /tmp/app-home /tmp/composer-cache /var/www/html
 
 ENV APP_ENV=local \
     COMPOSER_CACHE_DIR=/tmp/composer-cache \
+    COMPOSER_HOME=/tmp/app-home/.composer \
+    HOME=/tmp/app-home \
     PHP_IDE_CONFIG=serverName=runtracker-laravel \
     XDEBUG_MODE=off
 
-USER www-data
+USER ${APP_UID}:${APP_GID}
+
+RUN git config --global --add safe.directory /var/www/html
 
 FROM base AS production
 
