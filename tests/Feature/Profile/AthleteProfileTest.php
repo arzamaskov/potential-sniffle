@@ -25,8 +25,10 @@ class AthleteProfileTest extends TestCase
         $response = $this->actingAs($this->user())->get('/profile/edit');
 
         $response->assertOk();
+        $response->assertSee('<html lang="ru"', false);
         $response->assertSee('Редактирование профиля');
-        $response->assertSee('name="age"', false);
+        $response->assertSee('name="birth_date"', false);
+        $response->assertSee('type="date"', false);
         $response->assertSee('name="sex"', false);
         $response->assertSee('name="height_cm"', false);
         $response->assertSee('name="weight_kg"', false);
@@ -35,6 +37,8 @@ class AthleteProfileTest extends TestCase
         $response->assertSee('name="resting_heart_rate"', false);
         $response->assertSee('name="threshold_heart_rate"', false);
         $response->assertSee('Не выбран');
+        $response->assertSee('Дата рождения');
+        $response->assertSee('Формат: дд.мм.гггг');
         $response->assertSee('Размер обуви');
         $response->assertSee('Например: 42.5');
         $response->assertSee('Пороговый пульс / ПАНО');

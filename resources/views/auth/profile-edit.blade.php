@@ -25,17 +25,16 @@
 
                         <div class="grid gap-4 sm:grid-cols-2">
                             <div>
-                                <label for="age" class="block text-xs font-medium text-gray-600">Возраст</label>
+                                <label for="birth_date" class="block text-xs font-medium text-gray-600">
+                                    Дата рождения
+                                </label>
                                 <input
-                                    id="age"
-                                    name="age"
-                                    type="number"
-                                    min="1"
-                                    max="120"
-                                    inputmode="numeric"
+                                    id="birth_date"
+                                    name="birth_date"
+                                    type="date"
                                     class="mt-1.5 block h-10 w-full rounded-md border border-gray-200 px-3 text-sm text-gray-950 shadow-sm transition-colors focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
                                 >
-                                <p class="mt-1 text-xs text-gray-400">1-120</p>
+                                <p class="mt-1 text-xs text-gray-400">Формат: дд.мм.гггг</p>
                             </div>
 
                             <div>
