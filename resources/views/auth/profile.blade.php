@@ -13,13 +13,12 @@
                     </p>
                 </div>
 
-                <button
-                    type="button"
-                    disabled
-                    class="inline-flex min-h-10 shrink-0 items-center justify-center rounded-md border border-gray-200 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-500"
+                <a
+                    href="{{ route('profile.edit', absolute: false) }}"
+                    class="inline-flex min-h-10 shrink-0 items-center justify-center rounded-md border border-transparent bg-[#111827] px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
                 >
                     Редактировать профиль
-                </button>
+                </a>
             </div>
 
             <div class="grid gap-4 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.15fr)_minmax(0,1.15fr)]">

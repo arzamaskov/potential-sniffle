@@ -38,6 +38,8 @@ services:
     environment:
       APP_UID: ${APP_UID:-1000}
       APP_GID: ${APP_GID:-1000}
+      HOME: /tmp/node-home
+      COREPACK_HOME: /tmp/node-home/.cache/node/corepack
       VITE_DEV_SERVER_HOST: 0.0.0.0
       VITE_DEV_SERVER_URL: ${VITE_DEV_SERVER_URL:-http://localhost:5173}
       VITE_CORS_ORIGIN: ${VITE_CORS_ORIGIN:-http://localhost:8080}

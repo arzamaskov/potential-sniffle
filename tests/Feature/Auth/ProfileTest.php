@@ -61,6 +61,7 @@ class ProfileTest extends TestCase
         $response->assertSee('ПАНО / пороговый пульс');
         $response->assertSee('не указан');
         $response->assertSee('Редактировать профиль');
+        $response->assertSee('href="/profile/edit"', false);
         $response->assertDontSee('Мои тренировки');
         $response->assertDontSee('Добавить тренировку');
         $response->assertSee('action="/logout"', false);
