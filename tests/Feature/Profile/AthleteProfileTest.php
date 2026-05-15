@@ -34,6 +34,11 @@ class AthleteProfileTest extends TestCase
         $response->assertSee('name="max_heart_rate"', false);
         $response->assertSee('name="resting_heart_rate"', false);
         $response->assertSee('name="threshold_heart_rate"', false);
+        $response->assertSee('Не выбран');
+        $response->assertSee('Размер обуви');
+        $response->assertSee('Например: 42.5');
+        $response->assertSee('Пороговый пульс / ПАНО');
+        $response->assertSee('Используется для расчета тренировочных зон.');
         $response->assertSee('Сохранить');
     }
 

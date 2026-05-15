@@ -11,6 +11,10 @@
                     <p class="mt-3 text-sm leading-6 text-gray-600">
                         Настройки, которые используются для расчета зон, темпа и анализа тренировок.
                     </p>
+                    <p class="mt-4 text-sm text-gray-500">
+                        Логин:
+                        <span class="font-medium text-gray-950">{{ $user->login }}</span>
+                    </p>
                 </div>
 
                 <a
@@ -21,17 +25,7 @@
                 </a>
             </div>
 
-            <div class="grid gap-4 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.15fr)_minmax(0,1.15fr)]">
-                <section class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-                    <h2 class="text-base font-semibold text-gray-950">Аккаунт</h2>
-                    <dl class="mt-5 space-y-4 text-sm">
-                        <div>
-                            <dt class="text-gray-500">Логин</dt>
-                            <dd class="mt-1 font-medium text-gray-950">{{ $user->login }}</dd>
-                        </div>
-                    </dl>
-                </section>
-
+            <div class="grid gap-4 lg:grid-cols-2">
                 <section class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
                     <h2 class="text-base font-semibold text-gray-950">Параметры спортсмена</h2>
                     <dl class="mt-5 space-y-4 text-sm">
@@ -52,7 +46,7 @@
                             <dd class="text-gray-400">не указан</dd>
                         </div>
                         <div class="flex items-center justify-between gap-4">
-                            <dt class="text-gray-500">Размер обуви, EU/RU</dt>
+                            <dt class="text-gray-500">Размер обуви</dt>
                             <dd class="text-gray-400">не указан</dd>
                         </div>
                     </dl>
@@ -70,7 +64,7 @@
                             <dd class="text-gray-400">не указан</dd>
                         </div>
                         <div class="flex items-center justify-between gap-4">
-                            <dt class="text-gray-500">ПАНО / пороговый пульс</dt>
+                            <dt class="text-gray-500">Пороговый пульс / ПАНО</dt>
                             <dd class="text-gray-400">не указан</dd>
                         </div>
                     </dl>

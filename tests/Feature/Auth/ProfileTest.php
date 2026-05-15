@@ -44,9 +44,9 @@ class ProfileTest extends TestCase
         $response->assertSee('RunTracker');
         $response->assertSee('href="/workouts"', false);
         $response->assertSee('Тренировки');
+        $response->assertSee('href="/profile"', false);
         $response->assertSee('Профиль спортсмена');
         $response->assertSee('Настройки, которые используются для расчета зон, темпа и анализа тренировок.');
-        $response->assertSee('Аккаунт');
         $response->assertSee('Логин');
         $response->assertSee('user-login');
         $response->assertSee('Параметры спортсмена');
@@ -54,11 +54,11 @@ class ProfileTest extends TestCase
         $response->assertSee('Пол');
         $response->assertSee('Рост, см');
         $response->assertSee('Вес, кг');
-        $response->assertSee('Размер обуви, EU/RU');
+        $response->assertSee('Размер обуви');
         $response->assertSee('Пульсовые настройки');
         $response->assertSee('Максимальный пульс, уд/мин');
         $response->assertSee('Пульс покоя, уд/мин');
-        $response->assertSee('ПАНО / пороговый пульс');
+        $response->assertSee('Пороговый пульс / ПАНО');
         $response->assertSee('не указан');
         $response->assertSee('Редактировать профиль');
         $response->assertSee('href="/profile/edit"', false);
