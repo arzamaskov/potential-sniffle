@@ -31,6 +31,16 @@ deptrac:
         - type: classLike
           value: '^Src\\Identity\\Application\\.*'
 
+    - name: ProfileDomain
+      collectors:
+        - type: classLike
+          value: '^Src\\Profile\\Domain\\.*'
+
+    - name: ProfileApplication
+      collectors:
+        - type: classLike
+          value: '^Src\\Profile\\Application\\.*'
+
     - name: DatabaseInfrastructure
       collectors:
         - type: classLike
@@ -50,6 +60,8 @@ deptrac:
     LaravelInfrastructure:
       - IdentityApplication
       - IdentityDomain
+      - ProfileApplication
+      - ProfileDomain
       - SharedApplication
       - SharedDomain
       - Framework
@@ -67,10 +79,22 @@ deptrac:
       - SharedApplication
       - SharedDomain
 
+    ProfileDomain:
+      - IdentityDomain
+      - SharedDomain
+
+    ProfileApplication:
+      - ProfileDomain
+      - IdentityDomain
+      - SharedApplication
+      - SharedDomain
+
     DatabaseInfrastructure:
       - LaravelInfrastructure
       - IdentityApplication
       - IdentityDomain
+      - ProfileApplication
+      - ProfileDomain
       - SharedApplication
       - SharedDomain
       - Framework
@@ -79,6 +103,8 @@ deptrac:
       - LaravelInfrastructure
       - IdentityApplication
       - IdentityDomain
+      - ProfileApplication
+      - ProfileDomain
       - SharedApplication
       - SharedDomain
       - DatabaseInfrastructure
