@@ -27,7 +27,14 @@ help: ## Show this help
 build: ## Build development Docker images
 	$(DOCKER_COMPOSE) build
 
-up: ## Build and start development containers in background
+up: ## Start development containers in background
+	$(DOCKER_COMPOSE) up -d
+	@echo ""
+	@echo "  Application: $(APP_URL)"
+	@echo "  Vite:        $(VITE_URL)"
+	@echo ""
+
+up-build: ## Build and start development containers in background
 	$(DOCKER_COMPOSE) up -d --build
 	@echo ""
 	@echo "  Application: $(APP_URL)"
