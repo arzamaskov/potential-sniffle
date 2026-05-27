@@ -45,10 +45,6 @@
                             <dt class="text-gray-500">Вес, кг</dt>
                             <dd class="text-gray-400">не указан</dd>
                         </div>
-                        <div class="flex items-center justify-between gap-4">
-                            <dt class="text-gray-500">Размер обуви</dt>
-                            <dd class="text-gray-400">не указан</dd>
-                        </div>
                     </dl>
                 </section>
 

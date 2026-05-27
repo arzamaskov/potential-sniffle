@@ -78,23 +78,6 @@
                                 >
                                 <p class="mt-1 text-xs text-gray-400">30-250 кг</p>
                             </div>
-
-                            <div class="sm:col-span-2">
-                                <label for="shoe_size_eu" class="block text-xs font-medium text-gray-600">
-                                    Размер обуви
-                                </label>
-                                <input
-                                    id="shoe_size_eu"
-                                    name="shoe_size_eu"
-                                    type="number"
-                                    min="1"
-                                    max="60"
-                                    step="0.5"
-                                    inputmode="decimal"
-                                    class="mt-1.5 block h-10 w-full rounded-md border border-gray-200 px-3 text-sm text-gray-950 shadow-sm transition-colors focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
-                                >
-                                <p class="mt-1 text-xs text-gray-400">Например: 42.5</p>
-                            </div>
                         </div>
                     </section>
 

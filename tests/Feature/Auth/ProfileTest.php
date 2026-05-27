@@ -54,7 +54,7 @@ class ProfileTest extends TestCase
         $response->assertSee('Пол');
         $response->assertSee('Рост, см');
         $response->assertSee('Вес, кг');
-        $response->assertSee('Размер обуви');
+        $response->assertDontSee('Размер обуви');
         $response->assertSee('Пульсовые настройки');
         $response->assertSee('Максимальный пульс, уд/мин');
         $response->assertSee('Пульс покоя, уд/мин');

@@ -32,15 +32,14 @@ class AthleteProfileTest extends TestCase
         $response->assertSee('name="sex"', false);
         $response->assertSee('name="height_cm"', false);
         $response->assertSee('name="weight_kg"', false);
-        $response->assertSee('name="shoe_size_eu"', false);
+        $response->assertDontSee('name="shoe_size_eu"', false);
         $response->assertSee('name="max_heart_rate"', false);
         $response->assertSee('name="resting_heart_rate"', false);
         $response->assertSee('name="threshold_heart_rate"', false);
         $response->assertSee('Не выбран');
         $response->assertSee('Дата рождения');
         $response->assertSee('Формат: дд.мм.гггг');
-        $response->assertSee('Размер обуви');
-        $response->assertSee('Например: 42.5');
+        $response->assertDontSee('Размер обуви');
         $response->assertSee('Пороговый пульс / ПАНО');
         $response->assertSee('Используется для расчета тренировочных зон.');
         $response->assertSee('Сохранить');
